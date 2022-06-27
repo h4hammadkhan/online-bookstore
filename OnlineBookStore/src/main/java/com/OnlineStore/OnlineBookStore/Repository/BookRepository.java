@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.OnlineStore.OnlineBookStore.entity.Book;
 
 //@CrossOrigin("*") * indicate allow all request from all host
-@CrossOrigin("http://localhost:4200/") // in our case we know the host that's why we tell the hostname to the spring boot
+//@CrossOrigin("http://localhost:4200/") // in our case we know the host that's why we tell the hostname to the spring boot
 public interface BookRepository extends JpaRepository<Book, Long>{
 	
 	@RestResource(path = "categoryid")
 	Page<Book> findByCategoryId(@Param("id") Long id, Pageable pageable);
+	
+	@RestResource(path = "searchByKeyword")
+	Page<Book> findByNameContaining(@Param("name") String keyword, Pageable pageable);
 }
