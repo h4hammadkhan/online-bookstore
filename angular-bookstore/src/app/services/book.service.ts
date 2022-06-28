@@ -17,6 +17,11 @@ export class BookService {
     const searchUrl = `${this.baseUrl}/search/categoryid?id=${theCategoryId}`;
     return this.getBookList(searchUrl);
   }
+
+  getBookById(bookId:number): Observable<Book>{
+    const bookDetailUrl = `${this.baseUrl}/${bookId}`;
+    return this.httpClient.get<Book>(bookDetailUrl);
+  }
   
   getBookCategories():Observable<BookCategory[]>{
     return this.httpClient.get<GetResponseBookCategory>(this.categoryUrl).pipe(

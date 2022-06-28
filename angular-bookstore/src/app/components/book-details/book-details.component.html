@@ -1,0 +1,50 @@
+<div class="row mb-5">
+    <div class="col-lg-3">
+        
+        <app-book-category></app-book-category>
+
+    </div>
+    <div class="col-lg-9">
+
+        <div class="row">
+            
+            <!-- first column for displaying image -->
+            <div class="col-12 col-md-4">
+
+                <div class="thumbnail">
+                    <!-- <img src="https://via.placeholder.com/250x300.png/09f/fff" alt=""> -->
+                    <img [src]="book.imageUrl" alt="{{book.name}}" width="300" height="400">
+                </div>
+
+            </div>
+
+            <!-- second for content -->
+            <div class="col-12 col-md-7">
+                
+                <h3>{{book.name}}</h3>
+                <hr>
+
+                <p>{{book.description}}</p>
+                <hr>
+
+                <h4>Price: <strong>{{book.unitPrice | currency: 'Rs'}}</strong></h4>
+                <hr>
+
+                <h6>Qty. Available: {{book.unitsInStock}}</h6>
+                <hr>
+
+                <a routerLink="/books" class="btn btn-success">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                
+                <a class="btn btn-primary mx-1">
+                    <i class="fas fa-cart-arrow-down"></i> Add to Cart
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
