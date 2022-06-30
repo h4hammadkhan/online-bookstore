@@ -9,7 +9,8 @@ import { BookDetailsComponent } from './components/book-details/book-details.com
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BookCategoryComponent } from './components/book-category/book-category.component';
 import { SearchComponent } from './components/search/search.component';
-
+import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import { JwPaginationModule } from 'jw-angular-pagination'; // 70 
 
 @NgModule({
   declarations: [
@@ -18,12 +19,15 @@ import { SearchComponent } from './components/search/search.component';
     PageNotFoundComponent,
     BookCategoryComponent,
     SearchComponent,
-    BookDetailsComponent
+    BookDetailsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    JwPaginationModule,
+    NgbPaginationModule, 
+    NgbAlertModule
   ],
   providers: [],
   bootstrap: [AppComponent]

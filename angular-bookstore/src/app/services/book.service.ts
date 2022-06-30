@@ -13,9 +13,9 @@ export class BookService {
   private categoryUrl = "http://localhost:8080/api/v1/book-category";
   constructor(private httpClient: HttpClient) { }
   
-  getBooks(theCategoryId:number):Observable<Book[]>{
-    const searchUrl = `${this.baseUrl}/search/categoryid?id=${theCategoryId}`;
-    return this.getBookList(searchUrl);
+  getBooks(theCategoryId:number, currentPage: number, pageSize: number):Observable<GetResponseBooks>{
+    const searchUrl = `${this.baseUrl}/search/categoryid?id=${theCategoryId}&page=${currentPage}&size=${pageSize}`;
+    return this.httpClient.get<GetResponseBooks>(searchUrl)
   }
   
   getBookById(bookId:number): Observable<Book>{
@@ -29,17 +29,17 @@ export class BookService {
       );
     }
     
-    searchBooks(keyword:string):Observable<Book[]>{
-      const searchUrl = `${this.baseUrl}/search/searchByKeyword?name=${keyword}`;
-      return this.getBookList(searchUrl);
+    searchBooks(keyword:string, currentPage: number, pageSize: number):Observable<GetResponseBooks>{
+      const searchUrl = `${this.baseUrl}/search/searchByKeyword?name=${keyword}&page=${currentPage}&size=${pageSize}`;
+      return this.httpClient.get<GetResponseBooks>(searchUrl);
     }
     
     
-    private getBookList(searchUrl: string): Observable<Book[]> {
-      return this.httpClient.get<GetResponseBooks>(searchUrl).pipe(
-        map(response => response._embedded.books)
-      );
-    }
+    // private getBookList(searchUrl: string): Observable<Book[]> {
+    //   return this.httpClient.get<GetResponseBooks>(searchUrl).pipe(
+    //     map(response => response._embedded.books)
+    //   );
+    // }
 
 
 
@@ -48,6 +48,16 @@ export class BookService {
 interface GetResponseBooks{
   _embedded:{
     books: Book[];
+  },
+  page:{
+    // total number of records in each page
+    size: number,
+    // total number of records in the database
+    totalElements: number,
+    //total number of pages, start form 0 index
+    totalPages: number,
+    // current page
+    number: number
   }
 }
 

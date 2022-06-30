@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Book } from 'src/app/common/book';
 import { BookService } from 'src/app/services/book.service';
+import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-book-list',
@@ -12,10 +13,22 @@ import { BookService } from 'src/app/services/book.service';
 export class BookListComponent implements OnInit {
 
   books: Book[] = [];
-  currentCategoryId!: number;
-  searchMode!: boolean;
+  currentCategoryId: number = 1;
+  searchMode: boolean = false;
 
-  constructor(private _bookService: BookService, private _activatedRoute: ActivatedRoute) { }
+  // new properties for server side paging
+  currentPage: number = 1; // ng-bootstrap current page start form 1 index
+  pageSize: number = 5;
+  totalRecords: number = 0;
+
+  previousCategoryId: number = 1;
+
+
+
+  constructor(private _bookService: BookService, private _activatedRoute: ActivatedRoute, _config: NgbPaginationConfig) {
+    _config.maxSize = 3; // add max size to the ng pagination
+    _config.boundaryLinks = true; // first and last page links in pagination 
+   }
 
   ngOnInit(): void {
     this._activatedRoute.paramMap.subscribe(() => {
@@ -25,22 +38,29 @@ export class BookListComponent implements OnInit {
   }
 
 
+  updatePageSize(pageSize: number) {
+    this.pageSize = pageSize;
+    this.currentPage = 1;
+    this.listBooks();
+  }
+
+
   listBooks() {
 
     this.searchMode = this._activatedRoute.snapshot.paramMap.has('keyword');
 
-    if(this.searchMode){
+    if (this.searchMode) {
       // do search work
       this.handleSearchBooks();
     }
-    else{
+    else {
       // display books based on category
-      this.handleListBooks(); 
+      this.handleListBooks();
     }
-    
+
   }
 
-  handleListBooks(){
+  handleListBooks() {
     const hasCategoryId: boolean = this._activatedRoute.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
@@ -50,23 +70,52 @@ export class BookListComponent implements OnInit {
       this.currentCategoryId = 1;
     }
 
-    this._bookService.getBooks(this.currentCategoryId).subscribe(
+    // setting up the current page to 1
+    // if the user navigate to other category
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.currentPage = 1;
+    }
+
+    this.previousCategoryId = this.currentCategoryId;
+
+
+    this._bookService.getBooks(this.currentCategoryId, this.currentPage - 1, this.pageSize).subscribe(
+      // this.processPaginate() 
       data => {
-        this.books = data;
+        this.books = data._embedded.books;
+        // page number starts from 1 index
+        this.currentPage = data.page.number + 1;
+        this.totalRecords = data.page.totalElements;
+        this.pageSize = data.page.size;
+        console.log(data);
+
       }
     )
   }
 
 
-  handleSearchBooks(){
-    const keyword: string =   this._activatedRoute.snapshot.paramMap.get('keyword')!;
-    this._bookService.searchBooks(keyword).subscribe(
-      data=>{
-        // console.log(data);
-        this.books = data;
-        
+  handleSearchBooks() {
+    const keyword: string = this._activatedRoute.snapshot.paramMap.get('keyword')!;
+    this._bookService.searchBooks(keyword,  this.currentPage - 1, this.pageSize).subscribe(
+        this.processPaginate()
+    ) 
+  }
+
+  // fetching data to the server
+  processPaginate() {
+    return (
+      data: { 
+        _embedded: { books: Book[]; }; 
+        page: { number: number; totalElements: number; size: number; }; 
       }
-    )
+      ) => {
+      this.books = data._embedded.books;
+      // page number starts from 1 index
+      this.currentPage = data.page.number + 1;
+      this.totalRecords = data.page.totalElements;
+      this.pageSize = data.page.size;
+    }
   }
 
 }
+
