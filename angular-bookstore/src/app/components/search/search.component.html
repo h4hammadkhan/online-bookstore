@@ -1,10 +1,8 @@
 <div class="col-md-12 px-3">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12 d-flex">
             <input type="text" #searchInput class="form-control" placeholder="Search books" (keyup.enter)="searchBooks(searchInput.value)">
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary" (click)="searchBooks(searchInput.value)">Search</button>
+            <button style="margin-left: .5rem;" type="submit" class="btn btn-primary" (click)="searchBooks(searchInput.value)">Search</button>
         </div>
     </div>
 </div>

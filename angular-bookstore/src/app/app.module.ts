@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA ,NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -9,8 +9,11 @@ import { BookDetailsComponent } from './components/book-details/book-details.com
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BookCategoryComponent } from './components/book-category/book-category.component';
 import { SearchComponent } from './components/search/search.component';
-import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
-import { JwPaginationModule } from 'jw-angular-pagination'; // 70 
+import { NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import { JwPaginationModule } from 'jw-angular-pagination';
+import { CartStatusComponent } from './components/cart-status/cart-status.component'; // 70 
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,7 @@ import { JwPaginationModule } from 'jw-angular-pagination'; // 70
     BookCategoryComponent,
     SearchComponent,
     BookDetailsComponent,
+    CartStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,9 +31,12 @@ import { JwPaginationModule } from 'jw-angular-pagination'; // 70
     HttpClientModule,
     JwPaginationModule,
     NgbPaginationModule, 
-    NgbAlertModule
+    NgbAlertModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

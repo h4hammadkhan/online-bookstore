@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Book } from 'src/app/common/book';
 import { BookService } from 'src/app/services/book.service';
 import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
+import { CartService } from 'src/app/services/cart.service';
+import { CartItem } from 'src/app/common/cart-item';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-book-list',
@@ -25,9 +28,14 @@ export class BookListComponent implements OnInit {
 
 
 
-  constructor(private _bookService: BookService, private _activatedRoute: ActivatedRoute, _config: NgbPaginationConfig) {
-    _config.maxSize = 3; // add max size to the ng pagination
-    _config.boundaryLinks = true; // first and last page links in pagination 
+  constructor(private _bookService: BookService, 
+              private _activatedRoute: ActivatedRoute,
+              _config: NgbPaginationConfig,
+              private _cartService: CartService,
+              private _spinnerService: NgxSpinnerService) {
+               
+                _config.maxSize = 3; // add max size to the ng pagination
+                _config.boundaryLinks = true; // first and last page links in pagination 
    }
 
   ngOnInit(): void {
@@ -46,6 +54,8 @@ export class BookListComponent implements OnInit {
 
 
   listBooks() {
+    // start the loader/spinner 
+    this._spinnerService.show();
 
     this.searchMode = this._activatedRoute.snapshot.paramMap.has('keyword');
 
@@ -82,12 +92,14 @@ export class BookListComponent implements OnInit {
     this._bookService.getBooks(this.currentCategoryId, this.currentPage - 1, this.pageSize).subscribe(
       // this.processPaginate() 
       data => {
-        this.books = data._embedded.books;
-        // page number starts from 1 index
-        this.currentPage = data.page.number + 1;
-        this.totalRecords = data.page.totalElements;
-        this.pageSize = data.page.size;
-        console.log(data);
+          this._spinnerService.hide();
+          this.books = data._embedded.books;
+          // page number starts from 1 index
+          this.currentPage = data.page.number + 1;
+          this.totalRecords = data.page.totalElements;
+          this.pageSize = data.page.size;
+          // console.log(data); 
+
 
       }
     )
@@ -109,12 +121,22 @@ export class BookListComponent implements OnInit {
         page: { number: number; totalElements: number; size: number; }; 
       }
       ) => {
-      this.books = data._embedded.books;
-      // page number starts from 1 index
-      this.currentPage = data.page.number + 1;
-      this.totalRecords = data.page.totalElements;
-      this.pageSize = data.page.size;
+            // stop the spinner/loader
+          this._spinnerService.hide();
+          this.books = data._embedded.books;
+          // page number starts from 1 index
+          this.currentPage = data.page.number + 1;
+          this.totalRecords = data.page.totalElements;
+          this.pageSize = data.page.size;
+      
     }
+  }
+
+  addToCart(book: Book){
+    console.log(`book name: ${book.name} and book price: ${book.unitPrice}`);
+    
+    const cartItem = new CartItem(book);
+    this._cartService.addToCart(cartItem);
   }
 
 }
