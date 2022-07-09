@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CartItem } from 'src/app/common/cart-item';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({
@@ -8,12 +9,14 @@ import { CartService } from 'src/app/services/cart.service';
 })
 export class CartStatusComponent implements OnInit {
 
-  totalPrice:number = 0;
-  totalQuantity:number = 0;
+
+  totalPrice:number = this._cartService.getPriceFormLocal;
+  totalQuantity:number = this._cartService.getQtyFormLocal;
+ 
 
   constructor(private _cartService : CartService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.updateCartStatus();
   }
 
@@ -26,6 +29,9 @@ export class CartStatusComponent implements OnInit {
     this._cartService.totalQuantity.subscribe(
       data => this.totalQuantity = data
     )
+    
+
+
   }
 
 }

@@ -6,6 +6,7 @@ import { NgbPaginationConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CartService } from 'src/app/services/cart.service';
 import { CartItem } from 'src/app/common/cart-item';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { CartStatusComponent } from '../cart-status/cart-status.component';
 
 @Component({
   selector: 'app-book-list',
@@ -28,6 +29,7 @@ export class BookListComponent implements OnInit {
 
 
 
+
   constructor(private _bookService: BookService, 
               private _activatedRoute: ActivatedRoute,
               _config: NgbPaginationConfig,
@@ -41,7 +43,9 @@ export class BookListComponent implements OnInit {
   ngOnInit(): void {
     this._activatedRoute.paramMap.subscribe(() => {
       this.listBooks();
-    })
+    });
+
+
 
   }
 
@@ -66,6 +70,7 @@ export class BookListComponent implements OnInit {
     else {
       // display books based on category
       this.handleListBooks();
+      localStorage.getItem('item');
     }
 
   }
@@ -133,7 +138,7 @@ export class BookListComponent implements OnInit {
   }
 
   addToCart(book: Book){
-    console.log(`book name: ${book.name} and book price: ${book.unitPrice}`);
+    // console.log(`book name: ${book.name} and book price: ${book.unitPrice}`);
     
     const cartItem = new CartItem(book);
     this._cartService.addToCart(cartItem);

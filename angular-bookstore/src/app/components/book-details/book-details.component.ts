@@ -40,7 +40,8 @@ export class BookDetailsComponent implements OnInit {
 
   addToCart(){
     const cartItem = new CartItem(this.book);
-    this._cartService.addToCart(cartItem);
+      this._cartService.addToCart(cartItem);
+
   }
 
 }

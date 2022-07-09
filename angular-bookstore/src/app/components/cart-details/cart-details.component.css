@@ -1,0 +1,15 @@
+table{
+    font-weight: 500;
+}
+
+.price{
+    font-weight: 700;
+}
+
+.float{
+    float: right;
+}
+
+.pointer{
+    cursor: pointer;
+}

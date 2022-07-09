@@ -13,7 +13,7 @@ export class CartItem {
         this.name = book.name;
         this.imageUrl = book.imageUrl;
         this.unitPrice = book.unitPrice;
-        this.unitInStock = book.unitsInStock
+        this.unitInStock = book.unitsInStock;
         this.quantity = 1;
     }
 }
